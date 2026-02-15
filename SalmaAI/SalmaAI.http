@@ -1,0 +1,6 @@
+@SalmaAI_HostAddress = http://localhost:5056
+
+GET {{SalmaAI_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
