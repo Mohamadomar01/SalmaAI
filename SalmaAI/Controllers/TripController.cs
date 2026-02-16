@@ -142,7 +142,7 @@ namespace SalmaAI.Controllers
             var creditors = balances.Where(b => b.Balance > 0).OrderByDescending(b => b.Balance).ToList();
             var debtors = balances.Where(b => b.Balance < 0).OrderBy(b => b.Balance).ToList();
 
-            // 7️⃣ احسب التحويلات بطريقة جشعة (greedy)
+
             var transfers = new List<object>();
 
             int i = 0, j = 0;
