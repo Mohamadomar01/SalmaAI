@@ -95,14 +95,16 @@ namespace SalmaAI.Controllers
         public async Task<IActionResult> GetTripSettlement(int tripId)
         {
             //  تحقق من وجود الرحلة
-            var trip = await _appDBContext.Trips.FindAsync(tripId);
+
+
+            var trip = await _appDBContext.Trips.FirstOrDefaultAsync(t => t.TripId == tripId);
             if (trip == null) return NotFound("Trip not found");
 
             // تاكد من  المشاركين
             var participants = await _appDBContext.Participants
                 .Where(p => p.TripId == tripId)
                 .ToListAsync();
-            if (!participants.Any()) return BadRequest("No participants in this trip");
+            if (!participants.Any()) return NotFound("No participants in this trip");
 
             int participantCount = participants.Count;
 
