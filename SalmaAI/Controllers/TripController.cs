@@ -120,11 +120,11 @@ namespace SalmaAI.Controllers
                          .ToListAsync();
 
 
-            // 4️⃣ اجمع كل المصاريف وحسب نصيب كل شخص
+            //  اجمع كل المصاريف وحسب نصيب كل شخص
             decimal totalExpenses = paidAmounts.Sum(x => x.Paid);
             decimal sharePerPerson = totalExpenses / participantCount;
 
-            // 5️⃣ احسب الرصيد لكل مشترك
+            //  احسب الرصيد لكل مشترك
             var balances = participants.Select(p =>
             {
                 var paid = paidAmounts.FirstOrDefault(x => x.ParticipantId == p.ParticipantId)?.Paid ?? 0;
@@ -138,11 +138,11 @@ namespace SalmaAI.Controllers
                 };
             }).ToList();
 
-            // 6️⃣ قسم المشاركين إلى دائنين ومدينين
+            //  قسم المشاركين إلى دائنين ومدينين
             var creditors = balances.Where(b => b.Balance > 0).OrderByDescending(b => b.Balance).ToList();
             var debtors = balances.Where(b => b.Balance < 0).OrderBy(b => b.Balance).ToList();
 
-            // 7️⃣ احسب التحويلات بطريقة جشعة (greedy)
+            
             var transfers = new List<object>();
 
             int i = 0, j = 0;
