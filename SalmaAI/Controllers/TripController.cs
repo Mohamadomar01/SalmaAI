@@ -109,7 +109,7 @@ namespace SalmaAI.Controllers
             int participantCount = participants.Count;
 
             //   مجموع المصاريف لكل مشترك
-            var paidAmounts = await _appDBContext.ExpenseSplits
+            var paidAmountsForOneParticipant = await _appDBContext.ExpenseSplits
                     .Where(es => es.Expense.TripId == tripId)
                     .GroupBy(es => es.ParticipantId)
                     .Select(g => new
@@ -120,14 +120,15 @@ namespace SalmaAI.Controllers
                          .ToListAsync();
 
 
-            //  اجمع كل المصاريف وحسب نصيب كل شخص
-            decimal totalExpenses = paidAmounts.Sum(x => x.Paid);
+
+            //  اجمع كل المصاريف بالنسبه ل نصيب كل شخص
+            decimal totalExpenses = paidAmountsForOneParticipant.Sum(x => x.Paid);
             decimal sharePerPerson = totalExpenses / participantCount;
 
             //  احسب الرصيد لكل مشترك
             var balances = participants.Select(p =>
             {
-                var paid = paidAmounts.FirstOrDefault(x => x.ParticipantId == p.ParticipantId)?.Paid ?? 0;
+                var paid = paidAmountsForOneParticipant.FirstOrDefault(x => x.ParticipantId == p.ParticipantId)?.Paid ?? 0;
                 return new
                 {
                     p.ParticipantId,
@@ -135,7 +136,7 @@ namespace SalmaAI.Controllers
                     Paid = paid,
                     Share = sharePerPerson,
                     Balance = paid - sharePerPerson
-                };
+                }; 
             }).ToList();
 
             //  قسم المشاركين إلى دائنين ومدينين

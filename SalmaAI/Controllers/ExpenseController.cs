@@ -18,12 +18,20 @@ namespace SalmaAI.Controllers
             _appDBContext = appDBContext;
 
         }
-        [HttpGet("{tripId}/expenses")]
+        [HttpGet("/expenses")]
         public async Task<IActionResult> Index()
         {
-            var get =await  _appDBContext.Expenses.ToListAsync();
-            return Ok(get);
+            var get = await _appDBContext.Expenses
+                .Select(e => new ExpenseDTO
+                {
+                    
+                    Amount = e.Amount,
+                    
+                    PaidById = e.PaidById
+                })
+                .ToListAsync();
 
+            return Ok(get);
         }
         [HttpPost("{tripId}/expenses")]
         public async Task<IActionResult> Create( int tripId ,[FromForm]ExpenseDTO expense1)
@@ -46,6 +54,13 @@ namespace SalmaAI.Controllers
             };
             _appDBContext.Expenses.Add(expense);
             await _appDBContext.SaveChangesAsync();
+            var result = new ExpenseDTO
+            {
+               
+                Amount = expense.Amount,
+                PaidById = expense.PaidById
+            };
+
 
             return Ok(expense);
 

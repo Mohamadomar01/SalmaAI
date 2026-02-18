@@ -14,8 +14,9 @@ namespace SalmaAI.Model
         [Required]
         public int PaidById { get; set; }
 
-        
+    
         public int TripId { get; set; }
+        [JsonIgnore]
         public Trip Trip { get; set; }
     }
 }
